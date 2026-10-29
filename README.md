@@ -96,7 +96,11 @@ server.js        Application entry point
    npm ci
    ```
 
-2. Set `MONGO_URI` in `config/config.env` to your MongoDB connection string. It is intentionally blank initially. Set your own `JWT_SECRET` before deploying; the included value is generated for local development.
+2. Copy the example configuration, then set `MONGO_URI` to your MongoDB connection string and replace `JWT_SECRET`. `config/config.env` is local and ignored by Git.
+
+   ```bash
+   cp config/config.example.env config/config.env
+   ```
 
    ```dotenv
    NODE_ENV=development
@@ -116,7 +120,7 @@ server.js        Application entry point
 
 Use `npm start` to run without Nodemon. If PowerShell blocks `npm.ps1`, use `npm.cmd ci` and `npm.cmd run dev`.
 
-The API runs on `http://localhost:5000` by default. Change `PORT` if another project already uses port 5000. With `MONGO_URI` blank, welcome, Swagger UI, and health endpoints work; database-backed APIs require a configured connection. Allow Mongoose to create the booking uniqueness index when connecting to a new database.
+The API runs on `http://localhost:5001` with the example configuration (port 5000 is occupied by macOS Control Center on this machine). Change `PORT` if needed. With `MONGO_URI` blank, welcome, Swagger UI, and health endpoints work; database-backed APIs require a configured connection. Allow Mongoose to create the booking uniqueness index when connecting to a new database. Keep `config/config.env` private; it is not committed.
 
 ## API Routes
 
