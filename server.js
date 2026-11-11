@@ -135,11 +135,15 @@ const bookings = require("./routes/bookings");
 
 dotenv.config({ path: "./config/config.env" });
 
-if (process.env.MONGO_URI) {
-  connectDB().catch((error) => {
-    console.error(`Database connection failed: ${error.message}`);
-    process.exit(1);
-  });
+let databaseConnection;
+function ensureDatabaseConnection() {
+  if (!databaseConnection) {
+    databaseConnection = connectDB().catch((error) => {
+      databaseConnection = null;
+      throw error;
+    });
+  }
+  return databaseConnection;
 }
 
 const app = express();
@@ -158,11 +162,19 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 app.use(cors({
-  origin: process.env.NODE_ENV === "production"
-    ? process.env.FRONTEND_URL
-    : "http://localhost:3000",
+  origin: process.env.FRONTEND_URL || (process.env.VERCEL ? false : "http://localhost:3000"),
   credentials: true,
 }));
+
+app.use("/api/v1", async (req, res, next) => {
+  if (!process.env.MONGO_URI) return next();
+  try {
+    await ensureDatabaseConnection();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/spots", spots);
@@ -176,9 +188,7 @@ const swaggerDocs = swaggerJsDoc({
       version: "1.0.0",
       description: "REST API for night market vendor spots and bookings.",
     },
-    servers: [{
-      url: `http://localhost:${process.env.PORT || 5000}`,
-    }],
+    servers: [{ url: "/" }],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -228,19 +238,21 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
-  console.log(`Night Market Vendor Spot Booking API running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  const server = app.listen(PORT, () => {
+    console.log(`Night Market Vendor Spot Booking API running on http://localhost:${PORT}`);
+  });
 
-process.on("unhandledRejection", (error) => {
-  console.error(`Unhandled rejection: ${error.message}`);
-  server.close(() => process.exit(1));
-});
+  process.on("unhandledRejection", (error) => {
+    console.error(`Unhandled rejection: ${error.message}`);
+    server.close(() => process.exit(1));
+  });
 
-process.on("uncaughtException", (error) => {
-  console.error(`Uncaught exception: ${error.message}`);
-  process.exit(1);
-});
+  process.on("uncaughtException", (error) => {
+    console.error(`Uncaught exception: ${error.message}`);
+    process.exit(1);
+  });
+}
 
-module.exports = { app, server };
+module.exports = app;

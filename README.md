@@ -92,6 +92,14 @@ server.js        Application entry point
 
 ## Setup
 
+### Deploy with Vercel Services
+
+The root `vercel.json` deploys two services in one project: `app` (Express at the repository root) and `client` (Vite in `client/`). Set the Vercel project's framework to **Services**, with the project root at the repository root. Add `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRE`, and `JWT_COOKIE_EXPIRE` as Vercel environment variables. Do not set `VITE_API_BASE_URL` for this deployment: the browser calls the same-origin `/api/v1/*` routes. `FRONTEND_URL` is only needed if a separate frontend origin must call the API.
+
+Public routes are `/api/*`, `/api-docs*`, and `/health` to `app`; all other paths go to `client`. The client service rewrites deep links such as `/spots/A01` to its SPA entry page. There are no service bindings: browser JavaScript cannot read a runtime binding, and neither service makes server-side calls to the other. For local integration testing, run `vercel dev --local` from the repository root after installing the Vercel CLI. Alternatively, use the separate backend and Vite dev servers described below.
+
+The API's booking-limit serialization is process-local; multiple deployed function instances need database-level coordination to enforce the three-spots-per-member-per-day limit reliably.
+
 1. From `PJ05-MarketVendorBook`, install the locked dependencies:
 
    ```bash
