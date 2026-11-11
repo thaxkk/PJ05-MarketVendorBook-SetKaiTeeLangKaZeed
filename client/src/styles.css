@@ -142,9 +142,10 @@ main { flex: 1; }
 input::placeholder, textarea::placeholder { color: #8b9cb0; opacity: 1; }
 .form-stack input:focus, .form-stack select:focus, .form-stack textarea:focus, .filter-bar input:focus, .filter-bar select:focus { border-color: var(--ink); box-shadow: 0 0 0 3px #dceafb; }
 .spot-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 25px; }
-.spot-card { border: 1px solid var(--line); border-radius: 13px; background: var(--paper); overflow: hidden; box-shadow: 0 5px 16px #275a9310; transition: transform .25s, box-shadow .25s; }
-.spot-card:hover { transform: translateY(-5px); box-shadow: 0 14px 30px #275a9319; }
+.spot-card { display: block; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); overflow: hidden; box-shadow: 0 5px 16px #275a9310; transition: transform .25s, box-shadow .25s; }
+.spot-card:hover, .spot-card:focus-visible { transform: translateY(-5px); box-shadow: 0 14px 30px #275a9319; }
 .spot-art { height: 222px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #dfecfa; background-image: radial-gradient(#a6c0df .7px, transparent .9px); background-size: 6px 6px; color: var(--ink); overflow: hidden; border-bottom: 1px solid #c4d5e9; }
+.spot-card--clothing .spot-art { background-color: #7a99e6; background-image: radial-gradient(#ffffff66 .7px, transparent .9px); color: #fff; border-bottom-color: #6c8bd8; }
 .spot-art::before { content: ""; width: 42px; height: 6px; border: 1px solid #b6cce5; border-radius: 8px; background: #f3f7fc; position: absolute; top: 15px; }
 .art-zone { position: absolute; left: 19px; top: 32px; font: 7px/1.5 Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; max-width: calc(100% - 38px); }
 .art-number-label { font: 7px/1.4 Arial, sans-serif; letter-spacing: .2em; margin-top: 13px; }
@@ -164,7 +165,7 @@ input::placeholder, textarea::placeholder { color: #8b9cb0; opacity: 1; }
 .spot-card-footer strong { display: block; color: var(--ink); font-size: 22px; font-weight: 500; margin-top: 4px; }
 .spot-card-footer strong > span { font-size: 10px; color: var(--muted); font-weight: 400; }
 .round-link { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #b4cbe5; border-radius: 50%; color: var(--ink); font-size: 21px; transition: background .2s, color .2s; }
-.round-link:hover { background: var(--ink); color: white; }
+.spot-card:hover .round-link, .spot-card:focus-visible .round-link { background: var(--ink); color: white; }
 .info-strip { display: flex; align-items: center; gap: 25px; margin-bottom: 80px; padding: 29px 38px; border: 1px solid #bacfe6; border-radius: 10px; background: #e8f1fb; }
 .info-strip > span:first-child { font: 60px/1 var(--serif); color: #5d89be; }
 .info-strip strong { display: block; color: var(--ink); font-size: 18px; font-weight: 500; margin-top: 6px; }

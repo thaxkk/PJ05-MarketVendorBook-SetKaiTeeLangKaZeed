@@ -9,7 +9,12 @@ import SelectOrCreate from "../../components/SelectOrCreate.jsx";
 import DeleteZoneDialog from "../../components/DeleteZoneDialog.jsx";
 
 function SpotCard({ spot }) {
-  return <article className="spot-card"><div className="spot-art" aria-hidden="true"><span className="art-zone">NIGHT MARKET / {spot.zone}</span><span className="art-number-label">VENDOR SPOT</span><strong>{spot.spotNumber}</strong><span className="art-caption">A SPACE FOR YOUR STORY</span><span className="art-barcode" /></div><div className="spot-card-body"><div className="spot-card-top"><span className="zone-tag"><span className="online-dot" />{spot.zone}</span></div><h3>พื้นที่ {spot.spotNumber}</h3><p>{spot.locationDescription}</p><div className="spot-meta"><span>◫ &nbsp;{formatSpotSize(spot.spotSize)}</span><span>โซน {spot.zone}</span></div><div className="spot-card-footer"><div><small>ค่าเช่าต่อวัน</small><strong>{formatBaht(spot.rentalFee)}<span> / วัน</span></strong></div><Link className="round-link" to={`/spots/${spot._id}`} aria-label={`ดูรายละเอียดพื้นที่ ${spot.spotNumber}`}>↗</Link></div></div></article>;
+  return (
+    <Link className={`spot-card${spot.zone.trim() === "เสื้อผ้า" ? " spot-card--clothing" : ""}`} to={`/spots/${spot._id}`} aria-label={`ดูรายละเอียดพื้นที่ ${spot.spotNumber} โซน ${spot.zone}`}>
+      <div className="spot-art" aria-hidden="true"><span className="art-zone">NIGHT MARKET / {spot.zone}</span><span className="art-number-label">VENDOR SPOT</span><strong>{spot.spotNumber}</strong><span className="art-caption">A SPACE FOR YOUR STORY</span><span className="art-barcode" /></div>
+      <div className="spot-card-body"><div className="spot-card-top"><span className="zone-tag"><span className="online-dot" />{spot.zone}</span></div><h3>พื้นที่ {spot.spotNumber}</h3><p>{spot.locationDescription}</p><div className="spot-meta"><span>◫ &nbsp;{formatSpotSize(spot.spotSize)}</span><span>โซน {spot.zone}</span></div><div className="spot-card-footer"><div><small>ค่าเช่าต่อวัน</small><strong>{formatBaht(spot.rentalFee)}<span> / วัน</span></strong></div><span className="round-link" aria-hidden="true">↗</span></div></div>
+    </Link>
+  );
 }
 
 export function SpotList() {
