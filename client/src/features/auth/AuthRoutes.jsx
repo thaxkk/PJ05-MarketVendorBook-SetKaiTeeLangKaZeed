@@ -41,7 +41,8 @@ export function AuthPage({ mode }) {
       const body = register ? { name: form.name.trim(), email, tel: form.tel, password: form.password } : { email, password: form.password };
       const data = await api(`/api/v1/auth/${register ? "register" : "login"}`, { method: "POST", body });
       signIn(data);
-      navigate(location.state?.from?.pathname || "/spots", { replace: true });
+      const from = location.state?.from;
+      navigate(from?.pathname ? `${from.pathname}${from.search || ""}${from.hash || ""}` : "/spots", { replace: true });
     } catch (caught) {
       if (register && /duplicate key|E11000/i.test(caught.message)) {
         setError(new Error("อีเมลนี้ถูกใช้สมัครแล้ว กรุณาใช้อีเมลอื่น"));
